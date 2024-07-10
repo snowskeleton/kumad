@@ -4,8 +4,8 @@
 curl -O https://raw.githubusercontent.com/snowskeleton/kumad/main/kumad
 
 # clean up old installs
-sudo systemctl stop kumad
-sudo systemctl disable kumad
+sudo systemctl stop kumad &>/dev/null
+sudo systemctl disable kumad &>/dev/null
 sudo rm -rf /usr/local/bin/kumad
 
 #install fresh copy

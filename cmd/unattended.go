@@ -50,6 +50,11 @@ func run(cmd *cobra.Command, args []string) {
 	interval := viper.Get("push_interval")
 	url := viper.Get("push_url")
 
+	if url == "" || url == nil {
+		fmt.Println("URL endpoint not supplied. Please run\n\tkumad -u \"<uptime kuma URL>\"")
+		return
+	}
+
 	requestURL := fmt.Sprintf("%s", url)
 	req, err := http.NewRequest(http.MethodGet, requestURL, nil)
 	if err != nil {
@@ -60,19 +65,26 @@ func run(cmd *cobra.Command, args []string) {
 	for {
 		res, err := http.DefaultClient.Do(req)
 		if err != nil {
+			fmt.Println(req)
 			fmt.Printf("error making http request: %s\n", err)
 			os.Exit(1)
 		}
 
-		fmt.Printf("client: got response!\n")
-		fmt.Printf("client: status code: %d\n", res.StatusCode)
+		if verbose {
+			fmt.Printf("client: got response!\n")
+			fmt.Printf("client: status code: %d\n", res.StatusCode)
+		}
 		resBody, err := io.ReadAll(res.Body)
 		if err != nil {
 			fmt.Printf("client: could not read response body: %s\n", err)
 			os.Exit(1)
 		}
-		fmt.Printf("client: response body: %s\n", resBody)
+
+		if verbose {
+			fmt.Printf("client: response body: %s\n", resBody)
+		}
 
 		time.Sleep(time.Duration(interval.(int)) * time.Second)
+
 	}
 }

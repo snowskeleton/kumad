@@ -59,6 +59,7 @@ After=network.target
 [Service]
 ExecStart=/usr/local/bin/kumad unattended
 Restart=always
+RestartSec=5s
 User=root
 
 [Install]
